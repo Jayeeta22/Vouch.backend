@@ -8,43 +8,19 @@ const User=require("../models/userSchema")
 Router.get("/",(req,res)=>{
     res.send("hello from router")
 })
-//using promises
-// Router.post("/register",(req,res)=>{
-//     console.log(req.body)
-//     // res.json({massage:req.body}) //get this data in postman
-//     const {name,email,phone,password,Cpassword}=req.body
-//     if(!name || !email || !phone || !password || !Cpassword){
-//         return res.status(422).json({Error:"All fields are mandatory"})
-//     }
-//     // to find that user exist or not
-//     User.findOne({email:email})
-//     .then((userexist)=>{
-//         if(userexist){
-//             return res.status(422).json({Error:"This email already exist"})
-//         }
-//         const user=new User({name,email,phone,password,Cpassword}) //create new user instance
-//         user.save()
-//         .then(()=>{
-//             return res.status(201).json({Massage:"Registration successful"})
-//         }).catch((err)=>{
-//             return res.status(500).json({error:"Registration is not  successful"})
-//         })
-//     }).catch((err)=>{console.log(err)})
 
-    
-// })
-
-
-//using async await
 Router.post("/register",async(req,res)=>{
     console.log(req.body)
   // res.json({massage:req.body}) //get this data in postman
-    const {name,email,phone,password,Cpassword}=req.body
+    
+    try{
+        const {name,email,phone,password,Cpassword}=req.body
     if(!name || !email || !phone || !password || !Cpassword){
         return res.status(422).json({Error:"All fields are mandatory"})
     }
-
-    try{
+    if(password !== Cpassword){
+        return res.status(422).json({Error:"Please fill correct password"})
+    }
       const userexist=await  User.findOne({email:email})
 
         if(userexist){
